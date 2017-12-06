@@ -17,9 +17,11 @@ import br.com.douglasmotta.desafioconcrete.data.network.response.RepositoryRespo
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.MainReyclerViewHolder> {
 
     private List<RepositoryResponse> repositoryResponseList;
+    private OnClickItem onClickItem;
 
-    public MainRecyclerAdapter(List<RepositoryResponse> repositoryResponseList) {
+    public MainRecyclerAdapter(List<RepositoryResponse> repositoryResponseList, OnClickItem onClickItem) {
         this.repositoryResponseList = repositoryResponseList;
+        this.onClickItem = onClickItem;
     }
 
     @Override
@@ -32,15 +34,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public void onBindViewHolder(MainReyclerViewHolder holder, int position) {
         if (repositoryResponseList != null && repositoryResponseList.size() > 0) {
-            holder.textRepositoryName.setText(repositoryResponseList.get(position).getRepositoryName());
-            holder.textDescription.setText(repositoryResponseList.get(position).getRepositoryDescription());
-            holder.textForksCount.setText(String.valueOf(repositoryResponseList.get(position).getForksCount()));
-            holder.textStarsCount.setText(String.valueOf(repositoryResponseList.get(position).getNumberStars()));
-            holder.textUsername.setText(repositoryResponseList.get(position).getOwnerResponse().getLogin());
-
-            Picasso.with(holder.imageUsername.getContext())
-                    .load(repositoryResponseList.get(position).getOwnerResponse().getAvatarUrl())
-                    .into(holder.imageUsername);
+            bind(repositoryResponseList.get(position));
         }
     }
 
@@ -53,13 +47,16 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         return 0;
     }
 
-    static class MainReyclerViewHolder extends RecyclerView.ViewHolder {
+    class MainReyclerViewHolder extends RecyclerView.ViewHolder {
+
         TextView textRepositoryName;
         TextView textDescription;
         TextView textForksCount;
         TextView textStarsCount;
         TextView textUsername;
         ImageView imageUsername;
+
+        RepositoryResponse repositoryResponse;
 
         public MainReyclerViewHolder(View itemView) {
             super(itemView);
@@ -70,6 +67,35 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             textStarsCount = itemView.findViewById(R.id.text_star_number);
             textUsername = itemView.findViewById(R.id.text_username);
             imageUsername = itemView.findViewById(R.id.image_username);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onClickItem != null) {
+                        onClickItem.onItemClicked(repositoryResponse);
+                    }
+                }
+            });
         }
+
+        public void bind(RepositoryResponse repositoryResponse) {
+            this.repositoryResponse = repositoryResponse;
+
+            textRepositoryName.setText(repositoryResponse.getRepositoryName());
+            textDescription.setText(repositoryResponse.getRepositoryDescription());
+            textForksCount.setText(String.valueOf(repositoryResponse.getForksCount()));
+            textStarsCount.setText(String.valueOf(repositoryResponse.getNumberStars()));
+            textUsername.setText(repositoryResponse.getOwnerResponse().getLogin());
+
+            Picasso.with(imageUsername.getContext())
+                    .load(repositoryResponse.getOwnerResponse().getAvatarUrl())
+                    .into(imageUsername);
+
+
+        }
+    }
+
+    interface OnClickItem {
+        void onItemClicked(RepositoryResponse repositoryResponse);
     }
 }
