@@ -8,6 +8,8 @@ import br.com.douglasmotta.desafioconcrete.data.network.response.RepositoryRespo
 public interface MainContract {
     interface View {
         void setupAdapter(List<RepositoryResponse> repositoryResponseList);
+
+        void displayError();
     }
 
     interface Presenter extends Serializable {

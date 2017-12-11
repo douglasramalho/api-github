@@ -25,7 +25,13 @@ public class MainPresenter implements MainContract.Presenter {
         call.enqueue(new Callback<RepositoryListResponse>() {
             @Override
             public void onResponse(Call<RepositoryListResponse> call, Response<RepositoryListResponse> response) {
-                view.setupAdapter(response.body().getRepositoryResponseList());
+                if (response.isSuccessful()) {
+                    if (response.body().getRepositoryResponseList().size() > 0) {
+                        view.setupAdapter(response.body().getRepositoryResponseList());
+                    } else {
+                        view.displayError();
+                    }
+                }
             }
 
             @Override

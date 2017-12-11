@@ -1,10 +1,10 @@
 package br.com.douglasmotta.desafioconcrete.ui.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ViewFlipper;
 
 import java.io.Serializable;
 import java.util.List;
@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
 
     private RecyclerView recyclerView;
+    private ViewFlipper viewFlipper;
     private MainContract.Presenter presenter;
 
     private String language = "java";
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.recycler_main);
+        viewFlipper = findViewById(R.id.view_flipper);
 
         attachPresenter();
         setupBundle(savedInstanceState);
@@ -93,7 +95,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     @Override
+    public void displayError() {
+        viewFlipper.setDisplayedChild(1);
+    }
+
+    @Override
     public void onItemClicked(RepositoryResponse repositoryResponse) {
-        startActivity(new Intent(this, ).putExtra(EXTRA_REPOSITORY, repositoryResponse));
+        //startActivity(new Intent(this, ).putExtra(EXTRA_REPOSITORY, repositoryResponse));
     }
 }
